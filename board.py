@@ -1,5 +1,4 @@
 import copy
-
 from move import Move
 
 class Board:
@@ -8,36 +7,34 @@ class Board:
 	EMPTY = 0
 
 	def __init__(self):
+		self._dimension = 8
 		self._game_board = []
-		for i in range(8):
-			self._game_board.append([])
-			for _ in range(8):
-				self._game_board[i].append(self.EMPTY)
+		for _ in range(self._dimension):
+			self._game_board.append([self.EMPTY] * self._dimension)
 		self._last_player = self.W  # black always plays first
 		self._last_move = None
-		self._filled_cells = 0
-		self._dimension = 0
+		self._available_pieces = self._dimension ** 2
 
 	def print_board(self):
 		# Print column numbers
-		print('\n')
-		for j in range(8):
-			print('    ', j + 1, end='')
-		print('\n  ', 48*'-')
+		print('\n  ', end='')
+		for j in range(self._dimension):
+			print(f'  {j + 1}   ', end='')
+		print(f"\n  {6*self._dimension*'-'}")
 
 		# Print rows
-		for i in range(8):
-			print(i + 1, '|', end='')
-			for j in range(8):
+		for i in range(self._dimension):
+			print(f'{i + 1}|', end='')
+			for j in range(self._dimension):
+				piece = ' '
 				if self._game_board[i][j] == self.W:
-					piece = 'W'
+					piece = 'X'
 				elif self._game_board[i][j] == self.B:
-					piece = 'B'
-				else:
-					piece = ' '
-				print(' ', piece, ' |', end='')
-			if i != 7: print('\n')
-		print('\n  ', 48*'-', '\n')
+					piece = 'O'
+				print(f'  {piece}  |', end='')
+			if i != self._dimension - 1:
+				print('\n')
+		print(f"\n  {6*self._dimension*'-'}\n")
 
 	def get_children(self, letter):
 		return list()
@@ -47,18 +44,16 @@ class Board:
 
 	def is_terminal(self):
 		# Board is filled completely
-		return self._filled_cells == 8*8
+		return self._available_pieces == 0
 
 	def is_valid_move(self, row, col):
-		if (row < 0 or row > 7) or \
-	  		(col < 0 or col > 7) or \
-			(self._game_board[row][col] != self.EMPTY):
-				return False
-		return True
+		return not (row < 0 or row >= self._dimension or
+    				col < 0 or col >= self._dimension or
+    				self._game_board[row][col] != self.EMPTY)
 
 	def make_move(self, row, col, letter):
 		self._game_board[row][col] = letter
-		self._filled_cells += 1
+		self._available_pieces -= 1
 		self._last_move = Move(row, col, letter)
 		self._last_player = letter
 
@@ -69,12 +64,6 @@ class Board:
 	@last_move.setter
 	def last_move(self, l):
 		self._last_move = l
-
-	@last_move.setter
-	def last_move(self, move_obj):
-		self._last_move.row = move_obj.row
-		self._last_move.col = move_obj.col
-		self.last_move.value = move_obj.value
 
 	@property
 	def last_player(self):

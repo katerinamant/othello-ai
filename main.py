@@ -15,18 +15,17 @@ if __name__ == '__main__':
             player_name = 'white'
             piece = Board.W
 
+        print(f'Time for {player_name} to make a move!')
         while True:
             try:
-                print(f'Time for {player_name} to make a move!')
                 x = int(input('Choose row: ')) - 1
                 y = int(input('Choose column: ')) - 1
                 if board.is_valid_move(x, y):
                     board.make_move(x, y, piece)
+                    break
                 else:
                     print('Invalid move! Try again...')
             except ValueError:
                 print('Invalid input! Try again...\n')
-            else:
-                break
 
         board.print_board()
