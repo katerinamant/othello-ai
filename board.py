@@ -9,16 +9,21 @@ class Board:
 		self._game_board = []
 		for i in range(8):
 			self._game_board.append([])
-			for j in range(8):
+			for _ in range(8):
 				self._game_board[i].append(self.EMPTY)
-		self._last_player = 0
+		self._last_player = self.B
 		self._last_move = None
 		self._dimension = 0
 
 	def print_board(self):
-		print('------------------------------------------')
+		print('\n')
+		for j in range(8):
+			# Print column numbers
+			print('   ', j + 1, end='')
+		print('\n', 42*'-')
+
 		for i in range(8):
-			print('*', end='')
+			print(i + 1, '|', end='')
 			for j in range(8):
 				if self._game_board[i][j] == self.W:
 					piece = 'W'
@@ -27,8 +32,8 @@ class Board:
 				else:
 					piece = ''
 				print(' ', piece, ' |', end='')
-			print(' *')
-		print('------------------------------------------')
+			if i != 7: print('\n')
+		print('\n', 42*'-', '\n')
 
 	def get_children(self, letter):
 		return list()
@@ -37,7 +42,7 @@ class Board:
 		return 0
 
 	def is_terminal(self):
-		return True
+		return Board.EMPTY not in self._game_board
 
 	@property
 	def last_move(self):
@@ -46,6 +51,24 @@ class Board:
 	@last_move.setter
 	def last_move(self, l):
 		self._last_move = l
+
+	@property
+	def last_move(self):
+		return self._last_move
+
+	@last_move.setter
+	def last_move(self, move_obj):
+		self._last_move.row = move_obj.row
+		self._last_move.col = move_obj.col
+		self.last_move.value = move_obj.value
+
+	@property
+	def last_player(self):
+		return self._last_player
+
+	@last_player.setter
+	def last_player(self, p):
+		self._last_player = p
 
 	@property
 	def dimension(self):
@@ -62,13 +85,3 @@ class Board:
 	@game_board.setter
 	def game_board(self, g):
 		self.game_board = copy.deepcopy(g)
-
-	@property
-	def last_move(self):
-		return self._last_move
-
-	@last_move.setter
-	def last_move(self, move_obj):
-		self._last_move.row = move_obj.row
-		self._last_move.col = move_obj.col
-		self.last_move.value = move_obj.value
