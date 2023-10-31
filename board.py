@@ -1,5 +1,7 @@
 import copy
 
+from move import Move
+
 class Board:
 	W = 1
 	B = -1
@@ -11,17 +13,19 @@ class Board:
 			self._game_board.append([])
 			for _ in range(8):
 				self._game_board[i].append(self.EMPTY)
-		self._last_player = self.B
+		self._last_player = self.W  # black always plays first
 		self._last_move = None
+		self._filled_cells = 0
 		self._dimension = 0
 
 	def print_board(self):
+		# Print column numbers
 		print('\n')
 		for j in range(8):
-			# Print column numbers
-			print('   ', j + 1, end='')
-		print('\n', 42*'-')
+			print('    ', j + 1, end='')
+		print('\n  ', 48*'-')
 
+		# Print rows
 		for i in range(8):
 			print(i + 1, '|', end='')
 			for j in range(8):
@@ -30,10 +34,10 @@ class Board:
 				elif self._game_board[i][j] == self.B:
 					piece = 'B'
 				else:
-					piece = ''
+					piece = ' '
 				print(' ', piece, ' |', end='')
 			if i != 7: print('\n')
-		print('\n', 42*'-', '\n')
+		print('\n  ', 48*'-', '\n')
 
 	def get_children(self, letter):
 		return list()
@@ -42,7 +46,21 @@ class Board:
 		return 0
 
 	def is_terminal(self):
-		return Board.EMPTY not in self._game_board
+		# Board is filled completely
+		return self._filled_cells == 8*8
+
+	def is_valid_move(self, row, col):
+		if (row < 0 or row > 7) or \
+	  		(col < 0 or col > 7) or \
+			(self._game_board[row][col] != self.EMPTY):
+				return False
+		return True
+
+	def make_move(self, row, col, letter):
+		self._game_board[row][col] = letter
+		self._filled_cells += 1
+		self._last_move = Move(row, col, letter)
+		self._last_player = letter
 
 	@property
 	def last_move(self):
@@ -51,10 +69,6 @@ class Board:
 	@last_move.setter
 	def last_move(self, l):
 		self._last_move = l
-
-	@property
-	def last_move(self):
-		return self._last_move
 
 	@last_move.setter
 	def last_move(self, move_obj):
