@@ -7,12 +7,28 @@ class Board:
 
 	def __init__(self):
 		self._game_board = []
+		for i in range(8):
+			self._game_board.append([])
+			for j in range(8):
+				self._game_board[i].append(self.EMPTY)
 		self._last_player = 0
 		self._last_move = None
 		self._dimension = 0
 
 	def print_board(self):
-		pass
+		print('------------------------------------------')
+		for i in range(8):
+			print('*', end='')
+			for j in range(8):
+				if self._game_board[i][j] == self.W:
+					piece = 'W'
+				elif self._game_board[i][j] == self.B:
+					piece = 'B'
+				else:
+					piece = ''
+				print(' ', piece, ' |', end='')
+			print(' *')
+		print('------------------------------------------')
 
 	def get_children(self, letter):
 		return list()
