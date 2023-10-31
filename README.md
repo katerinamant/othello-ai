@@ -4,4 +4,4 @@
 
 *Authors: Katerina Mantaraki, Alexios Papadopoulos Siountris, Sarkis Samouelian*
 
-![A flow chart for the program](./flow_chart.png)
+![A flow chart for the program](images/flow_chart.png)
