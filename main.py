@@ -20,8 +20,9 @@ if __name__ == '__main__':
             try:
                 x = int(input('Choose row: ')) - 1
                 y = int(input('Choose column: ')) - 1
-                if board.is_valid_move(x, y):
-                    board.make_move(x, y, piece)
+                pieces_to_flip = board.is_valid_move(x, y, piece)
+                if pieces_to_flip:
+                    board.make_move(x, y, piece, pieces_to_flip)
                     break
                 else:
                     print('Invalid move! Try again...')

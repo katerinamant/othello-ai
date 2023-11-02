@@ -2,22 +2,22 @@ import copy
 from move import Move
 
 class Board:
-	W = 1
-	B = -1
-	EMPTY = 0
-	DIMENSION = 8
+	W: int = 1
+	B: int = -1
+	EMPTY: int = 0
+	DIMENSION: int = 8
 
 	def __init__(self):
-		self._game_board = []
+		self._game_board: list[list[int]] = []
 		for _ in range(self.DIMENSION):
 			self._game_board.append([self.EMPTY] * self.DIMENSION)
+		self._last_player: int = self.W  # black always plays first
+		self._last_move: int = None
+		self._available_pieces: int = self.DIMENSION ** 2
+
 		# Set up Othello game board
 		self._game_board[3][3] = self._game_board[4][4] = self.W
 		self._game_board[4][3] = self._game_board[3][4] = self.B
-		self._last_player = self.W  # black always plays first
-		self._last_move = None
-		self._available_pieces = self.DIMENSION ** 2
-		self._letters_to_number = {'O': self.W, 'X': self.B}
 
 	def print_board(self):
 		# Print column numbers
@@ -40,39 +40,100 @@ class Board:
 				print('\n')
 		print(f"\n  {6*self.DIMENSION*'-'}\n")
 
-	def get_children(self, letter):
+	def get_children(self, piece_value: int) -> list:
 		return list()
 
-	def evaluate(self):
+	def evaluate(self) -> int:
 		return 0
 
-	def is_terminal(self):
+	def is_terminal(self) -> bool:
 		# Board is filled completely
 		return self._available_pieces == 0
 
-	def get_neighbors(self, row, col):
+	def get_neighbors(self, row: int, col: int) -> list[int]:
 		neighbors = [(row-1, col), (row-1, col+1),
 			   		 (row, col+1), (row+1, col+1),
 					 (row+1, col), (row+1, col-1),
 					 (row, col-1), (row-1, col-1)]
 		return [nei for nei in neighbors if -1 not in nei and self.DIMENSION not in nei]
 
-	def is_valid_move(self, row, col):
-		return not (row < 0 or row >= self.DIMENSION or
-    				col < 0 or col >= self.DIMENSION or
-    				self._game_board[row][col] != self.EMPTY)
+	def is_valid_move(self, row: int, col: int, piece_value: int) -> set[tuple[int]]:
+		'''
+		Checks if a given player's move is valid.
 
-	def make_move(self, row, col, letter):
-		self._game_board[row][col] = letter
+		A move is considered valid if it is inside of the board's bounds
+		and it sandwiches one or more opposing pieces in a line.
+
+		'''
+		if (row not in range(0, self.DIMENSION) or
+			col not in range(0, self.DIMENSION) or
+			self._game_board[row][col] != self.EMPTY
+		):
+			return set()
+
+		pieces_to_flip = set()
+		neighbors = self.get_neighbors(row, col)
+		for x, y in neighbors:
+			# Check if this piece placement correctly forms a sandwich
+			# to at least one direction.
+			self.check_valid_line(piece_value, x, y, x-row, y-col, pieces_to_flip)
+		return pieces_to_flip
+
+	def check_valid_line(
+			self,
+			piece_value: int,
+			row: int,
+			col: int,
+			incr_row: int,
+			incr_col: int,
+			flip: set[tuple[int]]
+		) -> bool:
+		'''
+		Recursively checks along a horizontal/vertical/diagonal line
+		to see if there is a valid "sandwich" made by the color passed via piece_value.
+
+		If there is a valid sandwich, it also adds the coordinates of the cells
+		that should be converted (flipped) to the flip set.
+
+		'''
+		if (row not in range(0, self.DIMENSION) or
+	  		col not in range(0, self.DIMENSION) or
+			self._game_board[row][col] == self.EMPTY
+		):
+			return False
+
+		if self._game_board[row][col] == piece_value:
+			return True
+
+		if not self.check_valid_line(
+			piece_value, row+incr_row, col+incr_col, incr_row, incr_col, flip
+		):
+			return False
+
+		flip.add((row, col))
+		return True
+
+	def make_move(
+			self,
+			row: int,
+			col: int,
+			piece_value: int,
+			pieces_to_flip: set[tuple[int]]
+		):
+		'''
+		Registers the valid move made by a player and
+		calls to flip the sandwiched enemy discs.
+
+		'''
+		self._game_board[row][col] = piece_value
 		self._available_pieces -= 1
-		self._last_move = Move(row, col, letter)
-		self._last_player = letter
+		for x, y in pieces_to_flip:
+			self.flip_disc(x, y, piece_value)
+		self._last_move = Move(row, col, piece_value)
+		self._last_player = piece_value
 
-	def flip_disc(self, row, col, letter):
-		self._game_board[row][col] *= (
-			-1 if self._letters_to_number[letter] != self._game_board[row][col]
-			else 1
-		)
+	def flip_disc(self, row: int, col: int, piece_value: int):
+		self._game_board[row][col] *= -1
 
 	@property
 	def last_move(self):
