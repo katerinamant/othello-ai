@@ -17,6 +17,7 @@ class Board:
 		self._last_player = self.W  # black always plays first
 		self._last_move = None
 		self._available_pieces = self.DIMENSION ** 2
+		self._letters_to_number = {'O': self.W, 'X': self.B}
 
 	def print_board(self):
 		# Print column numbers
@@ -49,6 +50,13 @@ class Board:
 		# Board is filled completely
 		return self._available_pieces == 0
 
+	def get_neighbors(self, row, col):
+		neighbors = [(row-1, col), (row-1, col+1),
+			   		 (row, col+1), (row+1, col+1),
+					 (row+1, col), (row+1, col-1),
+					 (row, col-1), (row-1, col-1)]
+		return [nei for nei in neighbors if -1 not in nei and self.DIMENSION not in nei]
+
 	def is_valid_move(self, row, col):
 		return not (row < 0 or row >= self.DIMENSION or
     				col < 0 or col >= self.DIMENSION or
@@ -59,6 +67,12 @@ class Board:
 		self._available_pieces -= 1
 		self._last_move = Move(row, col, letter)
 		self._last_player = letter
+
+	def flip_disc(self, row, col, letter):
+		self._game_board[row][col] *= (
+			-1 if self._letters_to_number[letter] != self._game_board[row][col]
+			else 1
+		)
 
 	@property
 	def last_move(self):
