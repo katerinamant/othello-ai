@@ -48,8 +48,16 @@ class Board:
         return 0
 
     def is_terminal(self) -> bool:
-        # Board is filled completely
-        return self._available_pieces == 0
+        if self._available_pieces == 0:
+            return True  # The board is full, the game is over.
+    
+        for row in range(self.DIMENSION):
+            for col in range(self.DIMENSION):
+                if self.is_valid_move(row, col, self.W) or self.is_valid_move(row, col, self.B):
+                    return False  # There is at least one valid move for a player.
+
+        return True  # No valid moves for either player, the game is over.
+
 
     def get_neighbors(self, row: int, col: int) -> list[int]:
         neighbors = [
