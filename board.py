@@ -13,7 +13,7 @@ class Board:
         for _ in range(self.DIMENSION):
             self._game_board.append([self.EMPTY] * self.DIMENSION)
         self._last_player: int = self.W  # black always plays first
-        self._last_move: int = None
+        self._last_move: Move = None
         self._available_pieces: int = self.DIMENSION**2
 
         # Set up Othello game board
@@ -145,7 +145,7 @@ class Board:
         self._last_move = Move(row, col, piece_value)
         self._last_player = piece_value
 
-    def flip_disc(self, row: int, col: int, piece_value: int):
+    def flip_disc(self, row: int, col: int):
         self._game_board[row][col] *= -1
 
     @property
