@@ -14,7 +14,7 @@ class Board:
             self._game_board.append([self.EMPTY] * self.DIMENSION)
         self._last_player: int = self.W  # black always plays first
         self._last_move: Move = None
-        self._available_pieces: int = self.DIMENSION**2
+        self._available_pieces: int = self.DIMENSION ** 2
 
         # Set up Othello game board
         self._game_board[3][3] = self._game_board[4][4] = self.W
