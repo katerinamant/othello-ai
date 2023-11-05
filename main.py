@@ -37,6 +37,6 @@ if __name__ == "__main__":
         for col in board._game_board:
             res += col
 
-    winner = 'White' if res > 0 else 'Black'
-    win_msg = f'{winner} player wins!' if res else "It's a tie!"
+    winner = "White" if res > 0 else "Black"
+    win_msg = f"{winner} player wins!" if res else "It's a tie!"
     print(win_msg)
