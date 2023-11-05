@@ -31,13 +31,11 @@ if __name__ == "__main__":
 
         board.print_board()
     print("No valid moves for either player. The game is over.")
-   
-    for row in range(board.DIMENSION):
-        for col in range(board.DIMENSION):
-            res = 0
-            for row in board._game_board:
-                for col in board._game_board:
-                    res += col
+
+    res = 0
+    for row in board._game_board:
+        for col in board._game_board:
+            res += col
 
     winner = 'White' if res > 0 else 'Black'
     win_msg = f'{winner} player wins!' if res else "It's a tie!"
