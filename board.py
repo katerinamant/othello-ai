@@ -142,7 +142,7 @@ class Board:
         self._game_board[row][col] = piece_value
         self._available_pieces -= 1
         for x, y in pieces_to_flip:
-            self.flip_disc(x, y, piece_value)
+            self.flip_disc(x, y)
         self._last_move = Move(row, col, piece_value)
         self._last_player = piece_value
 
