@@ -34,7 +34,7 @@ if __name__ == "__main__":
 
     res = 0
     for row in board._game_board:
-        for col in board._game_board:
+        for col in row:
             res += col
 
     winner = "White" if res > 0 else "Black"
