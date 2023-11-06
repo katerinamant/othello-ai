@@ -44,8 +44,53 @@ class Board:
     def get_children(self, piece_value: int) -> list:
         return list()
 
-    def evaluate(self) -> int:
-        return 0
+    def evaluate(self):
+        """
+        Calculate the final evaluation score.
+
+        Corners are worth 2 points while the number of available moves,
+        the sides and the number of pieces on the board are worth 1 point each.
+
+        If the return value is positive player 1 is in a better position than player 2,
+        while if the return value is negative player 2 is in a better position.
+        """
+        player1_score = player2_score = 0
+        board_corners = [
+            (0, 0),
+            (0, self.DIMENSION - 1),
+            (self.DIMENSION - 1, 0),
+            (self.DIMENSION - 1, self.DIMENSION - 1),
+        ]
+        for row in range(self.DIMENSION):
+            for col in range(self.DIMENSION):
+                if self._game_board[row][col] == self.B:
+                    player1_score += 1
+                if self._game_board[row][col] == self.W:
+                    player2_score += 1
+
+                if self.is_valid_move(row, col, self.B):
+                    player1_score += 1
+                if self.is_valid_move(row, col, self.W):
+                    player2_score += 1
+
+                if (row, col) in board_corners:
+                    if self._game_board[row][col] == self.B:
+                        player1_score += 2
+                    if self._game_board[row][col] == self.W:
+                        player2_score += 2
+
+                if (
+                    row == 0
+                    or col == 0
+                    or row == self.DIMENSION - 1
+                    or col == self.DIMENSION - 1
+                ) and (row, col) not in board_corners:
+                    if self._game_board[row][col] == self.B:
+                        player1_score += 1
+                    if self._game_board[row][col] == self.W:
+                        player2_score += 1
+
+        return player1_score - player2_score
 
     def is_terminal(self) -> bool:
         if self._available_pieces == 0:
