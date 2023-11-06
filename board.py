@@ -14,7 +14,7 @@ class Board:
             self._game_board.append([self.EMPTY] * self.DIMENSION)
         self._last_player: int = self.W  # black always plays first
         self._last_move: Move = None
-        self._available_pieces: int = self.DIMENSION ** 2
+        self._available_pieces: int = self.DIMENSION**2
 
         # Set up Othello game board
         self._game_board[3][3] = self._game_board[4][4] = self.W
@@ -48,8 +48,17 @@ class Board:
         return 0
 
     def is_terminal(self) -> bool:
-        # Board is filled completely
-        return self._available_pieces == 0
+        if self._available_pieces == 0:
+            return True
+
+        for row in range(self.DIMENSION):
+            for col in range(self.DIMENSION):
+                if self.is_valid_move(row, col, self.W) or self.is_valid_move(
+                    row, col, self.B
+                ):
+                    return False
+
+        return True
 
     def get_neighbors(self, row: int, col: int) -> list[int]:
         neighbors = [
@@ -133,7 +142,7 @@ class Board:
         self._game_board[row][col] = piece_value
         self._available_pieces -= 1
         for x, y in pieces_to_flip:
-            self.flip_disc(x, y, piece_value)
+            self.flip_disc(x, y)
         self._last_move = Move(row, col, piece_value)
         self._last_player = piece_value
 
