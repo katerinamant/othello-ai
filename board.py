@@ -48,36 +48,36 @@ class Board:
         """
         Calculate the final evaluation score.
 
-        Corners are worth 2 points while the number of available moves,
-        the sides and the number of pieces on the board are worth 1 point each.
+        Corners are worth 550 points, the sides are worth 200 points,
+        and the number of available moves and the number of pieces on the board are worth 50 points each.
 
         If the return value is positive player 1 is in a better position than player 2,
         while if the return value is negative player 2 is in a better position.
         """
         player1_score = player2_score = 0
-        board_corners = [
+        board_corners = {
             (0, 0),
             (0, self.DIMENSION - 1),
             (self.DIMENSION - 1, 0),
             (self.DIMENSION - 1, self.DIMENSION - 1),
-        ]
+        }
         for row in range(self.DIMENSION):
             for col in range(self.DIMENSION):
-                if self._game_board[row][col] == self.B:
-                    player1_score += 1
                 if self._game_board[row][col] == self.W:
-                    player2_score += 1
+                    player1_score += 50
+                if self._game_board[row][col] == self.B:
+                    player2_score += 50
 
-                if self.is_valid_move(row, col, self.B):
-                    player1_score += 1
                 if self.is_valid_move(row, col, self.W):
-                    player2_score += 1
+                    player1_score += 50
+                if self.is_valid_move(row, col, self.B):
+                    player2_score += 50
 
                 if (row, col) in board_corners:
-                    if self._game_board[row][col] == self.B:
-                        player1_score += 2
                     if self._game_board[row][col] == self.W:
-                        player2_score += 2
+                        player1_score += 500
+                    if self._game_board[row][col] == self.B:
+                        player2_score += 500
 
                 if (
                     row == 0
@@ -85,10 +85,10 @@ class Board:
                     or row == self.DIMENSION - 1
                     or col == self.DIMENSION - 1
                 ) and (row, col) not in board_corners:
-                    if self._game_board[row][col] == self.B:
-                        player1_score += 1
                     if self._game_board[row][col] == self.W:
-                        player2_score += 1
+                        player1_score += 150
+                    if self._game_board[row][col] == self.B:
+                        player2_score += 150
 
         return player1_score - player2_score
 
