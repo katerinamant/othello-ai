@@ -65,30 +65,31 @@ class Board:
             for col in range(self.DIMENSION):
                 if self._game_board[row][col] == self.W:
                     player1_score += 50
+                    if (row, col) in board_corners:
+                        player1_score += 500
+                    elif (
+                        row == 0
+                        or col == 0
+                        or row == self.DIMENSION - 1
+                        or col == self.DIMENSION - 1
+                    ):
+                        player1_score += 150
                 if self._game_board[row][col] == self.B:
                     player2_score += 50
+                    if (row, col) in board_corners:
+                        player2_score += 500
+                    elif (
+                        row == 0
+                        or col == 0
+                        or row == self.DIMENSION - 1
+                        or col == self.DIMENSION - 1
+                    ):
+                        player2_score += 150
 
                 if self.is_valid_move(row, col, self.W):
                     player1_score += 50
                 if self.is_valid_move(row, col, self.B):
                     player2_score += 50
-
-                if (row, col) in board_corners:
-                    if self._game_board[row][col] == self.W:
-                        player1_score += 500
-                    if self._game_board[row][col] == self.B:
-                        player2_score += 500
-
-                if (
-                    row == 0
-                    or col == 0
-                    or row == self.DIMENSION - 1
-                    or col == self.DIMENSION - 1
-                ) and (row, col) not in board_corners:
-                    if self._game_board[row][col] == self.W:
-                        player1_score += 150
-                    if self._game_board[row][col] == self.B:
-                        player2_score += 150
 
         return player1_score - player2_score
 
