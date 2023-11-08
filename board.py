@@ -93,18 +93,27 @@ class Board:
                     res -= 50
         return res
 
-    def is_terminal(self) -> bool:
-        if self._available_pieces == 0:
-            return True
+    def is_terminal(self) -> set[int]:
+        """
+        If there are no available pieces or if
+        both players have no valid moves,
+        the set is empty and the board is terminal.
 
-        for row in range(self.DIMENSION):
-            for col in range(self.DIMENSION):
-                if self.is_valid_move(row, col, self.W) or self.is_valid_move(
-                    row, col, self.B
-                ):
-                    return False
+        If the board is not terminal, we can use the
+        resulting set to see which player has a valid move.
 
-        return True
+        """
+        available = set()
+        if self._available_pieces != 0:
+            for row in range(self.DIMENSION):
+                for col in range(self.DIMENSION):
+                    if self.W not in available and self.is_valid_move(row, col, self.W):
+                        available.add(self.W)
+                    if self.B not in available and self.is_valid_move(row, col, self.B):
+                        available.add(self.B)
+                    if len(available) == 2: break
+
+        return available
 
     def get_neighbors(self, row: int, col: int) -> list[int]:
         neighbors = [

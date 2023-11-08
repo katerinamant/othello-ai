@@ -7,7 +7,7 @@ class Player:
         self._piece_val = piece_val
 
     def mini_max(self, node: Node, depth: int, flag: int):
-        if depth == self._max_depth or node.board.is_terminal():
+        if depth == self._max_depth or not node.board.is_terminal():
             return (node.board.evaluate(), node.board.last_move)
 
         children = node.get_children(flag)
@@ -25,3 +25,11 @@ class Player:
     @max_depth.setter
     def max_depth(self, depth):
         self._max_depth = depth
+
+    @property
+    def piece_val(self):
+        return self._piece_val
+
+    @piece_val.setter
+    def piece_val(self, val):
+        self._piece_val = val
