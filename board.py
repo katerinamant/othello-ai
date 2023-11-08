@@ -14,7 +14,7 @@ class Board:
             self._game_board.append([self.EMPTY] * self.DIMENSION)
         self._last_player: int = self.W  # black always plays first
         self._last_move: Move = None
-        self._available_pieces: int = self.DIMENSION**2
+        self._available_pieces: int = self.DIMENSION ** 2
 
         # Set up Othello game board
         self._game_board[3][3] = self._game_board[4][4] = self.W
@@ -45,7 +45,43 @@ class Board:
         return list()
 
     def evaluate(self) -> int:
-        return 0
+        """
+        Calculate the final evaluation score.
+
+        Corners are worth 550 points, the sides are worth 200 points,
+        and the number of available moves and the number of pieces
+        on the board are worth 50 points each.
+
+        If the return value is positive white has the edge over black,
+        while if the return value is negative black has the edge.
+
+        """
+        res: int = 0
+        board_corners: set[tuple[int, int]] = {
+            (0, 0),
+            (0, self.DIMENSION - 1),
+            (self.DIMENSION - 1, 0),
+            (self.DIMENSION - 1, self.DIMENSION - 1),
+        }
+
+        for row in range(self.DIMENSION):
+            for col in range(self.DIMENSION):
+                res += 50 * self._game_board[row][col]
+                if (row, col) in board_corners:
+                    res += 500 * self._game_board[row][col]
+                elif (
+                    row == 0
+                    or col == 0
+                    or row == self.DIMENSION - 1
+                    or col == self.DIMENSION - 1
+                ):
+                    res += 150 * self._game_board[row][col]
+
+                if self.is_valid_move(row, col, self.W):
+                    res += 50
+                if self.is_valid_move(row, col, self.B):
+                    res -= 50
+        return res
 
     def is_terminal(self) -> bool:
         if self._available_pieces == 0:
