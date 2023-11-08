@@ -41,7 +41,7 @@ if __name__ == "__main__":
     board.print_board()
 
     available_moves = {Board.W, Board.B}
-    while len(available_moves) != 0:
+    while available_moves:
         if board.last_player == Board.W:
             player_name = "black"
             piece = Board.B
@@ -83,11 +83,9 @@ if __name__ == "__main__":
 
     print("No valid moves for either player. The game is over.")
 
-    res = 0
-    for row in board._game_board:
-        for col in row:
-            res += col
-
-    winner = "White" if res > 0 else "Black"
-    win_msg = f"{winner} player wins!" if res else "It's a tie!"
+    if board.white_pieces == board.black_pieces:
+        win_msg = "It's a tie!"
+    else:
+        winner = "White" if board.white_pieces > board.black_pieces else "Black"
+        win_msg = f"{winner} wins {board.black_pieces} - {board.white_pieces}!"
     print(win_msg)

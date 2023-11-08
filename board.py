@@ -20,13 +20,17 @@ class Board:
         # Set up Othello game board
         self._game_board[3][3] = self._game_board[4][4] = self.W
         self._game_board[4][3] = self._game_board[3][4] = self.B
+        self._black_pieces: int = 2
+        self._white_pieces: int = 2
 
     def print_board(self):
         # Print column numbers
         print("\n  ", end="")
         for j in range(self.DIMENSION):
             print(f"  {j + 1}   ", end="")
-        print(f"\n  {6*self.DIMENSION*'-'}")
+        print(f"\tBlack (X): {self._black_pieces}")
+        print(f"  {6*self.DIMENSION*'-'}", end="")
+        print(f"\tWhite (O): {self._white_pieces}")
 
         # Print rows
         for i in range(self.DIMENSION):
@@ -196,12 +200,22 @@ class Board:
         """
         self._game_board[row][col] = piece_value
         self._available_pieces -= 1
+        if piece_value == self.B:
+            self._black_pieces += 1
+        else:
+            self._white_pieces += 1
         for x, y in pieces_to_flip:
             self.flip_disc(x, y)
         self._last_move = Move(row, col, piece_value)
         self._last_player = piece_value
 
     def flip_disc(self, row: int, col: int):
+        if self._game_board[row][col] == self.B:
+            self._black_pieces -= 1
+            self._white_pieces += 1
+        else:
+            self._white_pieces -= 1
+            self._black_pieces += 1
         self._game_board[row][col] *= -1
 
     @property
@@ -227,6 +241,14 @@ class Board:
     @dimension.setter
     def dimension(self, d):
         self.DIMENSION = d
+
+    @property
+    def black_pieces(self):
+        return self._black_pieces
+
+    @property
+    def white_pieces(self):
+        return self._white_pieces
 
     @property
     def game_board(self):

@@ -7,14 +7,14 @@ class Player:
         self._piece_val = piece_val
 
     def mini_max(self, board: Board, depth: int, flag: int) -> tuple[int, Move]:
-        if depth == self._max_depth or not board.is_terminal():
+        if depth == self._max_depth or len(board.is_terminal()) == 0:
             return (board.evaluate(), board.last_move)
 
-        children = board.get_children(self._piece_val)
-        res = (float("-inf") if self._piece_val > 0 else float("inf"), None)
+        children = board.get_children(flag)
+        res = (float("-inf") if flag > 0 else float("inf"), None)
         for child in children:
             val = self.mini_max(child, depth + 1, flag * -1)
-            if self._piece_val > 0 and val[0] > res[0] or self._piece_val < 0 and val[0] < res[0]:
+            if flag > 0 and val[0] > res[0] or flag < 0 and val[0] < res[0]:
                 res = (val[0], child.last_move)
         return res
 
