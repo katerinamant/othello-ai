@@ -57,7 +57,7 @@ class Board:
 
         """
         res: int = 0
-        board_corners: list[tuple[int, int]] = {
+        board_corners: set[tuple[int, int]] = {
             (0, 0),
             (0, self.DIMENSION - 1),
             (self.DIMENSION - 1, 0),
