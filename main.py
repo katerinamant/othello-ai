@@ -1,6 +1,7 @@
 from player import Player
 from board import Board
 
+
 def welcome_screen() -> tuple[int, str]:
     """
     Print welcome messages and request necessary input
@@ -11,7 +12,8 @@ def welcome_screen() -> tuple[int, str]:
     while True:
         try:
             while minimax_depth not in {1, 2, 3}:
-                if minimax_depth: print("Invalid input!")
+                if minimax_depth:
+                    print("Invalid input!")
                 print("Choose difficulty:")
                 print("1 - Easy\n2 - Medium\n3 - Hard")
                 minimax_depth = int((input(">> ")))
@@ -22,11 +24,13 @@ def welcome_screen() -> tuple[int, str]:
     print("")
     user_input = None
     while user_input != "B" and user_input != "W":
-        if user_input: print("Invalid input!")
+        if user_input:
+            print("Invalid input!")
         print("Choose color! Remember, black goes first...\nBlack: B / White: W")
         user_input = input(">> ")
 
     return (minimax_depth, user_input)
+
 
 if __name__ == "__main__":
     minimax_depth, user_input = welcome_screen()
@@ -76,7 +80,9 @@ if __name__ == "__main__":
             # also calculates the pieces to flip
             pieces_to_flip = board.is_valid_move(move.row, move.col, piece)
             board.make_move(move.row, move.col, piece, pieces_to_flip)
-            print(f"{player_name[0].upper() + player_name[1:]} placed a piece on {move.row + 1} x {move.col + 1}")
+            print(
+                f"{player_name[0].upper() + player_name[1:]} placed a piece on {move.row + 1} x {move.col + 1}"
+            )
 
         board.print_board()
         available_moves = board.is_terminal()

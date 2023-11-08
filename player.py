@@ -1,6 +1,7 @@
 from board import Board
 from move import Move
 
+
 class Player:
     def __init__(self, max_depth: int, piece_val: int):
         self._max_depth = max_depth
