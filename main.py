@@ -2,10 +2,42 @@ from player import Player
 from board import Board
 from node import Node
 
+def welcome_screen(minimax_depth, user):
+    """
+    Print welcome messages and request necessary input
+
+    """
+    print("\tWelcome to Othello AI!")
+    while True:
+        try:
+            while minimax_depth not in {1, 2, 3}:
+                if minimax_depth: print("Invalid input!")
+                print("Choose difficulty:")
+                print("1 - Easy\n2 - Medium\n3 - Difficult")
+                minimax_depth = int((input(">> ")))
+            break
+        except ValueError:
+            print("Invalid input!")
+
+    print("")
+    while user != "B" and user != "W":
+        if user: print("Invalid input!")
+        print("Choose color! Remember, black goes first...\nBlack: B / White: W")
+        user = input(">> ")
+
 if __name__ == "__main__":
-    playerW = Player(2, Board.W)
-    playerB = Player(2, Board.B)
+    playerW = Player(0, Board.W)
+    playerB = Player(0, Board.B)
     board = Board()
+
+    minimax_depth: int = None
+    user: str = None
+    welcome_screen(minimax_depth, user)
+    if user == "B":
+        playerW.max_depth = minimax_depth
+    else:
+        playerB.max_depth = minimax_depth
+
     board.print_board()
 
     while not board.is_terminal():

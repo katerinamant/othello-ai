@@ -17,3 +17,11 @@ class Player:
             if flag > 0 and val[0] > res[0] or flag < 0 and val[0] < res[0]:
                 res = (val[0], child.board.last_move)
         return res
+
+    @property
+    def max_depth(self):
+        return self._max_depth
+
+    @max_depth.setter
+    def max_depth(self, depth):
+        self._max_depth = depth
