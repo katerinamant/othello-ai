@@ -74,6 +74,7 @@ class Board:
                         or col == self.DIMENSION - 1
                     ):
                         player1_score += 150
+                    continue
                 if self._game_board[row][col] == self.B:
                     player2_score += 50
                     if (row, col) in board_corners:
@@ -85,6 +86,7 @@ class Board:
                         or col == self.DIMENSION - 1
                     ):
                         player2_score += 150
+                    continue
 
                 if self.is_valid_move(row, col, self.W):
                     player1_score += 50
