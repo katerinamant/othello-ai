@@ -14,7 +14,7 @@ class Board:
             self._game_board.append([self.EMPTY] * self.DIMENSION)
         self._last_player: int = self.W  # black always plays first
         self._last_move: Move = None
-        self._available_pieces: int = self.DIMENSION**2
+        self._available_pieces: int = self.DIMENSION ** 2
 
         # Set up Othello game board
         self._game_board[3][3] = self._game_board[4][4] = self.W
@@ -44,56 +44,44 @@ class Board:
     def get_children(self, piece_value: int) -> list:
         return list()
 
-    def evaluate(self):
+    def evaluate(self) -> int:
         """
         Calculate the final evaluation score.
 
         Corners are worth 550 points, the sides are worth 200 points,
-        and the number of available moves and the number of pieces on the board are worth 50 points each.
+        and the number of available moves and the number of pieces
+        on the board are worth 50 points each.
 
-        If the return value is positive player 1 is in a better position than player 2,
-        while if the return value is negative player 2 is in a better position.
+        If the return value is positive white has the edge over black,
+        while if the return value is negative black has the edge.
+
         """
-        player1_score = player2_score = 0
-        board_corners = {
+        res: int = 0
+        board_corners: list[tuple[int, int]] = {
             (0, 0),
             (0, self.DIMENSION - 1),
             (self.DIMENSION - 1, 0),
             (self.DIMENSION - 1, self.DIMENSION - 1),
         }
+
         for row in range(self.DIMENSION):
             for col in range(self.DIMENSION):
-                if self._game_board[row][col] == self.W:
-                    player1_score += 50
-                    if (row, col) in board_corners:
-                        player1_score += 500
-                    elif (
-                        row == 0
-                        or col == 0
-                        or row == self.DIMENSION - 1
-                        or col == self.DIMENSION - 1
-                    ):
-                        player1_score += 150
-                    continue
-                if self._game_board[row][col] == self.B:
-                    player2_score += 50
-                    if (row, col) in board_corners:
-                        player2_score += 500
-                    elif (
-                        row == 0
-                        or col == 0
-                        or row == self.DIMENSION - 1
-                        or col == self.DIMENSION - 1
-                    ):
-                        player2_score += 150
-                    continue
+                res += 50 * self._game_board[row][col]
+                if (row, col) in board_corners:
+                    res += 500 * self._game_board[row][col]
+                elif (
+                    row == 0
+                    or col == 0
+                    or row == self.DIMENSION - 1
+                    or col == self.DIMENSION - 1
+                ):
+                    res += 150 * self._game_board[row][col]
 
                 if self.is_valid_move(row, col, self.W):
-                    player1_score += 50
+                    res += 50
                 if self.is_valid_move(row, col, self.B):
-                    player2_score += 50
-
-        return player1_score - player2_score
+                    res -= 50
+        return res
 
     def is_terminal(self) -> bool:
         if self._available_pieces == 0:
