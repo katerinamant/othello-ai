@@ -46,10 +46,11 @@ class Board:
         children: list[Board] = []
         for row in range(self.DIMENSION):
             for col in range(self.DIMENSION):
-                if self.is_valid_move(row, col, piece_value):
+                pieces_to_flip = self.is_valid_move(row, col, piece_value)
+                if pieces_to_flip:
                     child = Board()
-                    child.game_board(self.game_board)
-                    child.make_move(row, col, piece_value)
+                    child.game_board = self.game_board
+                    child.make_move(row, col, piece_value, pieces_to_flip)
                     children.append(child)
         return children
 

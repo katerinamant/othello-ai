@@ -1,9 +1,10 @@
 from player import Player
 from board import Board
+from node import Node
 
 if __name__ == "__main__":
-    playerW = Player(0, Board.W)
-    playerB = Player(0, Board.B)
+    playerW = Player(2, Board.W)
+    playerB = Player(2, Board.B)
     board = Board()
     board.print_board()
 
@@ -16,18 +17,23 @@ if __name__ == "__main__":
             piece = Board.W
 
         print(f"Time for {player_name} to make a move!")
-        while True:
-            try:
-                x = int(input("Choose row: ")) - 1
-                y = int(input("Choose column: ")) - 1
-                pieces_to_flip = board.is_valid_move(x, y, piece)
-                if pieces_to_flip:
-                    board.make_move(x, y, piece, pieces_to_flip)
-                    break
-                else:
-                    print("Invalid move! Try again...")
-            except ValueError:
-                print("Invalid input! Try again...\n")
+        if piece == Board.W:
+            while True:
+                try:
+                    x = int(input("Choose row: ")) - 1
+                    y = int(input("Choose column: ")) - 1
+                    pieces_to_flip = board.is_valid_move(x, y, piece)
+                    if pieces_to_flip:
+                        board.make_move(x, y, piece, pieces_to_flip)
+                        break
+                    else:
+                        print("Invalid move! Try again...")
+                except ValueError:
+                    print("Invalid input! Try again...\n")
+        else:
+            move = playerB.mini_max(Node(board), 0, piece)[1]
+            pieces_to_flip = board.is_valid_move(move.row, move.col, piece)
+            board.make_move(move.row, move.col, piece, pieces_to_flip)
 
         board.print_board()
     print("No valid moves for either player. The game is over.")

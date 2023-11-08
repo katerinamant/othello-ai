@@ -14,8 +14,8 @@ class Player:
         for child in children:
             val = self.mini_max(child, depth+1, flag*-1)
             if (
-                flag > 0 and val > res[0] or
-                flag < 0 and val < res[0]
+                flag > 0 and val[0] > res[0] or
+                flag < 0 and val[0] < res[0]
             ):
-                res = (val, child.board.last_move)
+                res = (val[0], child.board.last_move)
         return res
