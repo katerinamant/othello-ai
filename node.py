@@ -1,5 +1,6 @@
 from board import Board
 
+
 class Node:
     def __init__(self, board: Board):
         self._board: Board = board
@@ -7,10 +8,7 @@ class Node:
         self._children: list[Node] = None
 
     def get_children(self, piece_val: int):
-        self._children = [
-            Node(child)
-            for child in self._board.get_children(piece_val)
-        ]
+        self._children = [Node(child) for child in self._board.get_children(piece_val)]
         return self._children
 
     @property
