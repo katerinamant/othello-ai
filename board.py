@@ -1,5 +1,6 @@
-import copy
+from __future__ import annotations
 from move import Move
+import copy
 
 
 class Board:
@@ -41,8 +42,16 @@ class Board:
                 print("\n")
         print(f"\n  {6*self.DIMENSION*'-'}\n")
 
-    def get_children(self, piece_value: int) -> list:
-        return list()
+    def get_children(self, piece_value: int) -> list[Board]:
+        children: list[Board] = []
+        for row in range(self.DIMENSION):
+            for col in range(self.DIMENSION):
+                if self.is_valid_move(row, col, piece_value):
+                    child = Board()
+                    child.game_board(self.game_board)
+                    child.make_move(row, col, piece_value)
+                    children.append(child)
+        return children
 
     def evaluate(self) -> int:
         """

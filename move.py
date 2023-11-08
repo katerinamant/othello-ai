@@ -1,8 +1,8 @@
 class Move:
-    def __init__(self, row, col, value):
+    def __init__(self, row, col, piece_value):
         self._row = row
         self._col = col
-        self._value = value
+        self._piece_value = piece_value
 
     @property
     def row(self):
@@ -13,8 +13,8 @@ class Move:
         return self._col
 
     @property
-    def value(self):
-        return self._value
+    def piece_value(self):
+        return self._piece_value
 
     @row.setter
     def row(self, row):
@@ -24,6 +24,6 @@ class Move:
     def col(self, col):
         self._col = col
 
-    @value.setter
-    def value(self, value):
-        self._value = value
+    @piece_value.setter
+    def piece_value(self, piece_value):
+        self._piece_value = piece_value
