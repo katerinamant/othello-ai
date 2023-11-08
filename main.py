@@ -1,6 +1,5 @@
 from player import Player
 from board import Board
-from node import Node
 
 def welcome_screen() -> tuple[int, str]:
     """
@@ -71,7 +70,7 @@ if __name__ == "__main__":
                     print("Invalid input! Try again...\n")
         else:
             print("Calculating...")
-            move = ai_player.mini_max(Node(board), 0, piece)[1]
+            move = ai_player.mini_max(board, 0, piece)[1]
             # We know it is a valid move
             # but the is_valid_move() function
             # also calculates the pieces to flip
