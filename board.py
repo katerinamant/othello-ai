@@ -215,4 +215,4 @@ class Board:
 
     @game_board.setter
     def game_board(self, g):
-        self.game_board = copy.deepcopy(g)
+        self._game_board = copy.deepcopy(g)
