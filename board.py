@@ -1,5 +1,6 @@
-import copy
+from __future__ import annotations
 from move import Move
+import copy
 
 
 class Board:
@@ -14,18 +15,22 @@ class Board:
             self._game_board.append([self.EMPTY] * self.DIMENSION)
         self._last_player: int = self.W  # black always plays first
         self._last_move: Move = None
-        self._available_pieces: int = self.DIMENSION ** 2
+        self._available_pieces: int = self.DIMENSION**2
 
         # Set up Othello game board
         self._game_board[3][3] = self._game_board[4][4] = self.W
         self._game_board[4][3] = self._game_board[3][4] = self.B
+        self._black_pieces: int = 2
+        self._white_pieces: int = 2
 
     def print_board(self):
         # Print column numbers
         print("\n  ", end="")
         for j in range(self.DIMENSION):
             print(f"  {j + 1}   ", end="")
-        print(f"\n  {6*self.DIMENSION*'-'}")
+        print(f"\tBlack (X): {self._black_pieces}")
+        print(f"  {6*self.DIMENSION*'-'}", end="")
+        print(f"\tWhite (O): {self._white_pieces}")
 
         # Print rows
         for i in range(self.DIMENSION):
@@ -41,8 +46,17 @@ class Board:
                 print("\n")
         print(f"\n  {6*self.DIMENSION*'-'}\n")
 
-    def get_children(self, piece_value: int) -> list:
-        return list()
+    def get_children(self, piece_value: int) -> list[Board]:
+        children: list[Board] = []
+        for row in range(self.DIMENSION):
+            for col in range(self.DIMENSION):
+                pieces_to_flip = self.is_valid_move(row, col, piece_value)
+                if pieces_to_flip:
+                    child = Board()
+                    child.game_board = self.game_board
+                    child.make_move(row, col, piece_value, pieces_to_flip)
+                    children.append(child)
+        return children
 
     def evaluate(self) -> int:
         """
@@ -83,18 +97,28 @@ class Board:
                     res -= 50
         return res
 
-    def is_terminal(self) -> bool:
-        if self._available_pieces == 0:
-            return True
+    def is_terminal(self) -> set[int]:
+        """
+        If there are no available pieces or if
+        both players have no valid moves,
+        the set is empty and the board is terminal.
 
-        for row in range(self.DIMENSION):
-            for col in range(self.DIMENSION):
-                if self.is_valid_move(row, col, self.W) or self.is_valid_move(
-                    row, col, self.B
-                ):
-                    return False
+        If the board is not terminal, we can use the
+        resulting set to see which player has a valid move.
 
-        return True
+        """
+        available = set()
+        if self._available_pieces != 0:
+            for row in range(self.DIMENSION):
+                for col in range(self.DIMENSION):
+                    if self.W not in available and self.is_valid_move(row, col, self.W):
+                        available.add(self.W)
+                    if self.B not in available and self.is_valid_move(row, col, self.B):
+                        available.add(self.B)
+                    if len(available) == 2:
+                        break
+
+        return available
 
     def get_neighbors(self, row: int, col: int) -> list[int]:
         neighbors = [
@@ -177,12 +201,22 @@ class Board:
         """
         self._game_board[row][col] = piece_value
         self._available_pieces -= 1
+        if piece_value == self.B:
+            self._black_pieces += 1
+        else:
+            self._white_pieces += 1
         for x, y in pieces_to_flip:
             self.flip_disc(x, y)
         self._last_move = Move(row, col, piece_value)
         self._last_player = piece_value
 
     def flip_disc(self, row: int, col: int):
+        if self._game_board[row][col] == self.B:
+            self._black_pieces -= 1
+            self._white_pieces += 1
+        else:
+            self._white_pieces -= 1
+            self._black_pieces += 1
         self._game_board[row][col] *= -1
 
     @property
@@ -210,9 +244,17 @@ class Board:
         self.DIMENSION = d
 
     @property
+    def black_pieces(self):
+        return self._black_pieces
+
+    @property
+    def white_pieces(self):
+        return self._white_pieces
+
+    @property
     def game_board(self):
         return self._game_board
 
     @game_board.setter
     def game_board(self, g):
-        self.game_board = copy.deepcopy(g)
+        self._game_board = copy.deepcopy(g)
