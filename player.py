@@ -7,7 +7,9 @@ class Player:
         self._max_depth = max_depth
         self._piece_val = piece_val
 
-    def mini_max(self, board: Board, depth: int, alpha , beta , flag: int) -> tuple[int, Move]:
+    def mini_max(
+        self, board: Board, depth: int, alpha, beta, flag: int
+    ) -> tuple[int, Move]:
         if depth == self._max_depth or len(board.is_terminal()) == 0:
             return (board.evaluate(), board.last_move)
 

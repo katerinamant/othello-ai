@@ -76,7 +76,7 @@ if __name__ == "__main__":
             print("Calculating...")
             alpha = float("-inf")
             beta = float("inf")
-            move = ai_player.mini_max(board, 0, alpha , beta , piece)[1]
+            move = ai_player.mini_max(board, 0, alpha, beta, piece)[1]
             # We know it is a valid move
             # but the is_valid_move() function
             # also calculates the pieces to flip
