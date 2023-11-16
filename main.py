@@ -56,7 +56,7 @@ if __name__ == "__main__":
         if piece not in available_moves:
             print(f"Sorry, there are no available moves for {player_name}!")
             board.last_player *= -1
-            break
+            continue
 
         print(f"Time for {player_name} to make a move!")
         if piece == user_player.piece_val:

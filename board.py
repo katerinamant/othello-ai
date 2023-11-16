@@ -20,6 +20,7 @@ class Board:
         # Set up Othello game board
         self._game_board[3][3] = self._game_board[4][4] = self.W
         self._game_board[4][3] = self._game_board[3][4] = self.B
+        self._available_pieces -= 4
         self._black_pieces: int = 2
         self._white_pieces: int = 2
 
