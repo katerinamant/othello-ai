@@ -8,11 +8,12 @@ def welcome_screen() -> tuple[int, str]:
 
     """
     print("\tWelcome to Othello AI!")
-    minimax_depth = 5
     difficulty = None
+    difficulties = {1, 2, 3}
+    minimax_depth = 5
     while True:
         try:
-            while difficulty not in {1, 2, 3}:
+            while difficulty not in difficulties:
                 if minimax_depth:
                     print("Invalid input!")
                 print("Choose difficulty:")
