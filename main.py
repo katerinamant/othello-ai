@@ -8,15 +8,21 @@ def welcome_screen() -> tuple[int, str]:
 
     """
     print("\tWelcome to Othello AI!")
-    minimax_depth = None
+    difficulty = None
+    difficulties = {1, 2, 3}
+    minimax_depth = 5
     while True:
         try:
-            while minimax_depth not in {1, 2, 3}:
+            while difficulty not in difficulties:
                 if minimax_depth:
                     print("Invalid input!")
                 print("Choose difficulty:")
-                print("1 - Easy\n2 - Medium\n3 - Hard")
-                minimax_depth = int((input(">> ")))
+                print("1 - Novice\n2 - Medium\n3 - Expert")
+                difficulty = int((input(">> ")))
+                if difficulty == 1:
+                    minimax_depth = 1
+                elif difficulty == 2:
+                    minimax_depth = 3
             break
         except ValueError:
             print("Invalid input!")
@@ -74,7 +80,9 @@ if __name__ == "__main__":
                     print("Invalid input! Try again...\n")
         else:
             print("Calculating...")
-            move = ai_player.mini_max(board, 0, piece)[1]
+            alpha = float("-inf")
+            beta = float("inf")
+            move = ai_player.mini_max(board, 0, alpha, beta, piece)[1]
             # We know it is a valid move
             # but the is_valid_move() function
             # also calculates the pieces to flip
