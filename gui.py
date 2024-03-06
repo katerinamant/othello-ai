@@ -71,7 +71,7 @@ class GUI:
 
         return (diff_input, color_input)
 
-    def create_board_window(self, board: Board, ai_player: Player):
+    def create_board_window(self, board: Board, ai_player: Player) -> None:
         """
         Creates the window with the game board
         """
@@ -108,7 +108,10 @@ class GUI:
 
         self._board_window = sg.Window(title="Othello AI", layout=layout, finalize=True)
 
-    def user_move(self, board: Board, user_player: Player):
+    def show_popup(self, msg: str) -> None:
+        sg.popup(msg)
+
+    def user_move(self, board: Board, user_player: Player) -> None:
         """
         Updates the board when the user chooses
         a cell to place a piece
@@ -159,7 +162,11 @@ class GUI:
                     # Update title
                     self._board_window["title"].update(f"{ai_name} is calculating a move...")
 
-                self._board_window.refresh()
+                    self._board_window.refresh()
+
+                else:
+                    self.show_popup("Invalid move! Try again...")
+
                 break
 
     def ai_move(self, board: Board, ai_player: Player, x: int, y: int):
@@ -204,4 +211,20 @@ class GUI:
                 raise WindowClosedError
 
             if event == "Continue":
+                break
+
+    def show_win_msg(self, msg):
+        self._board_window.close()
+
+        layout = [[sg.Text(msg)]]
+
+        # Create window
+        window = sg.Window(title="Othello AI", layout=layout)
+
+        # Event loop
+        while True:
+            event, values = window.read()
+
+            if event == sg.WIN_CLOSED:
+                window.close()
                 break

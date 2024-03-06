@@ -53,7 +53,7 @@ def main():
             piece = Board.W
 
         if piece not in available_moves:
-            print(f"Sorry, there are no available moves for {player_name}!")
+            gui.show_popup(f"Sorry, there are no available moves for {player_name}!")
             board.last_player *= -1
             continue
 
@@ -82,14 +82,14 @@ def main():
 
         available_moves = board.is_terminal()
 
-    print("No valid moves for either player. The game is over.")
+    gui.show_popup("No valid moves for either player. The game is over.")
 
     if board.white_pieces == board.black_pieces:
         win_msg = "It's a tie!"
     else:
         winner = "White" if board.white_pieces > board.black_pieces else "Black"
         win_msg = f"{winner} wins {board.black_pieces} - {board.white_pieces}!"
-    print(win_msg)
+    gui.show_win_msg(win_msg)
 
 if __name__ == "__main__":
     gui = GUI()
