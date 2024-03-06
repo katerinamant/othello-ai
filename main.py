@@ -1,45 +1,38 @@
+from gui import GUI
 from player import Player
 from board import Board
 
 
 def welcome_screen() -> tuple[int, str]:
     """
-    Print welcome messages and request necessary input
+    Show welcome window
 
     """
     print("\tWelcome to Othello AI!")
-    difficulty = None
-    difficulties = {1, 2, 3}
-    minimax_depth = 5
-    while True:
-        try:
-            while difficulty not in difficulties:
-                if minimax_depth:
-                    print("Invalid input!")
-                print("Choose difficulty:")
-                print("1 - Novice\n2 - Medium\n3 - Expert")
-                difficulty = int((input(">> ")))
-                if difficulty == 1:
-                    minimax_depth = 1
-                elif difficulty == 2:
-                    minimax_depth = 3
-            break
-        except ValueError:
-            print("Invalid input!")
+    difficulty, color = gui.welcome_window()
 
-    print("")
-    user_input = None
-    while user_input != "B" and user_input != "W":
-        if user_input:
-            print("Invalid input!")
-        print("Choose color! Remember, black goes first...\nBlack: B / White: W")
-        user_input = input(">> ")
+    if difficulty == None or color == None:
+        # User closed the window without providing input
+        return (None, None)
+
+    if difficulty == "Novice":
+        minimax_depth = 1
+    elif difficulty == "Medium":
+        minimax_depth = 3
+    else:
+        minimax_depth = 5
+    user_input = color[0]
 
     return (minimax_depth, user_input)
 
 
-if __name__ == "__main__":
+def main():
     minimax_depth, user_input = welcome_screen()
+
+    if minimax_depth == None or user_input == None:
+        # User closed the window without providing input
+        return
+
     if user_input == "B":
         user_player = Player(0, Board.B)
         ai_player = Player(minimax_depth, Board.W)
@@ -103,3 +96,7 @@ if __name__ == "__main__":
         winner = "White" if board.white_pieces > board.black_pieces else "Black"
         win_msg = f"{winner} wins {board.black_pieces} - {board.white_pieces}!"
     print(win_msg)
+
+if __name__ == "__main__":
+    gui = GUI()
+    main()
