@@ -8,6 +8,7 @@ class WindowClosedError(Exception):
     The user unexpectedly closed the window
     """
 
+
 class GUI:
     def __init__(self) -> None:
         sg.theme("DarkBlue2")
@@ -40,7 +41,9 @@ class GUI:
         layout.append(color_row)
         color_input = None
 
-        layout.append([sg.Button("Start", disabled=(diff_input == None) or (color_input == None))])
+        layout.append(
+            [sg.Button("Start", disabled=(diff_input == None) or (color_input == None))]
+        )
 
         # Create window
         window = sg.Window(title="Othello AI", layout=layout)
@@ -61,13 +64,17 @@ class GUI:
                 diff_input = event
                 for diff in difficulties:
                     window[diff].update(disabled=diff != event)
-                    window["Start"].update(disabled=(diff_input == None) or (color_input == None))
+                    window["Start"].update(
+                        disabled=(diff_input == None) or (color_input == None)
+                    )
 
             if event in colors:
                 color_input = event
                 for color in colors:
                     window[color].update(disabled=color != event)
-                    window["Start"].update(disabled=(diff_input == None) or (color_input == None))
+                    window["Start"].update(
+                        disabled=(diff_input == None) or (color_input == None)
+                    )
 
         return (diff_input, color_input)
 
@@ -82,8 +89,8 @@ class GUI:
         else:
             row = [sg.Text(f"Time for black to make a move!", key="title")]
         # Add continue button
-        row.append(sg.Text('', size=(8, 1)))
-        row.append(sg.Button("Continue",disabled=ai_player.piece_val != Board.B))
+        row.append(sg.Text("", size=(8, 1)))
+        row.append(sg.Button("Continue", disabled=ai_player.piece_val != Board.B))
         layout.append(row)
 
         # Create board layout
@@ -137,9 +144,13 @@ class GUI:
                 raise WindowClosedError
 
             if event not in self._used_cells:
-                pieces_to_flip = board.is_valid_move(event[0], event[1], user_player.piece_val)
+                pieces_to_flip = board.is_valid_move(
+                    event[0], event[1], user_player.piece_val
+                )
                 if pieces_to_flip:
-                    board.make_move(event[0], event[1], user_player.piece_val, pieces_to_flip)
+                    board.make_move(
+                        event[0], event[1], user_player.piece_val, pieces_to_flip
+                    )
 
                     # Update board layout
                     game_board = board.game_board
@@ -156,11 +167,17 @@ class GUI:
                             self._board_window[key].update(piece)
 
                     # Update score messages
-                    self._board_window["black_pieces"].update(f"Black (X): {board.black_pieces}")
-                    self._board_window["white_pieces"].update(f"White (O): {board.white_pieces}")
+                    self._board_window["black_pieces"].update(
+                        f"Black (X): {board.black_pieces}"
+                    )
+                    self._board_window["white_pieces"].update(
+                        f"White (O): {board.white_pieces}"
+                    )
 
                     # Update title
-                    self._board_window["title"].update(f"{ai_name} is calculating a move...")
+                    self._board_window["title"].update(
+                        f"{ai_name} is calculating a move..."
+                    )
 
                     self._board_window.refresh()
 
@@ -178,7 +195,9 @@ class GUI:
             player_name = "black"
         else:
             player_name = "white"
-        self._board_window["title"].update(f"{player_name[0].upper() + player_name[1:]} placed a piece on {x + 1} x {y + 1}")
+        self._board_window["title"].update(
+            f"{player_name[0].upper() + player_name[1:]} placed a piece on {x + 1} x {y + 1}"
+        )
 
         self._board_window["Continue"].update(disabled=False)
 

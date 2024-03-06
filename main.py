@@ -70,7 +70,9 @@ def main():
             # We know it is a valid move
             # but the is_valid_move() function
             # also calculates the pieces to flip
-            pieces_to_flip = board.is_valid_move(move.row, move.col, ai_player.piece_val)
+            pieces_to_flip = board.is_valid_move(
+                move.row, move.col, ai_player.piece_val
+            )
             board.make_move(move.row, move.col, ai_player.piece_val, pieces_to_flip)
             print(
                 f"{player_name[0].upper() + player_name[1:]} placed a piece on {move.row + 1} x {move.col + 1}"
@@ -90,6 +92,7 @@ def main():
         winner = "White" if board.white_pieces > board.black_pieces else "Black"
         win_msg = f"{winner} wins {board.black_pieces} - {board.white_pieces}!"
     gui.show_win_msg(win_msg)
+
 
 if __name__ == "__main__":
     gui = GUI()
